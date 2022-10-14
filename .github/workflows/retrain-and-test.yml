@@ -1,0 +1,22 @@
+name: CI on push
+on:
+ push:
+ 
+jobs:
+ ci:
+   name: CI job
+   runs-on: ubuntu-latest
+   steps:
+   - uses: actions/checkout@v2
+   - name: Set up Python 3.8
+     uses: actions/setup-python@v2
+     with:
+       python-version: 3.8
+   - name: Install dependencies
+     run: |
+       make install
+   - name: Retrain and test new intents
+     working-directory: ${{ github.workspace }}
+     run: |
+       rasa train
+       rasa test --fail-on-prediction-errors
